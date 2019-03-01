@@ -1,0 +1,17 @@
+<pg-container>
+    <app-window-size-listener (height)="usersHeight = $event" [topOffset]="70"></app-window-size-listener>
+    <div class="app-users">
+        <div class="container-fluid no-padding ng-star-inserted">
+            <div class="row">
+                <div class="col-md-4 b-grey sm-b-b rounded">
+                  <app-user-search (onSelectedUser)="onSelectUser($event)" [usersHeight]="usersHeight"></app-user-search>
+                </div>
+                <div class="col-md-8 rounded">
+                    <div class="placeholder" *ngIf="selectedUser">
+                        <app-user-profile [user]="selectedUser" (onSelectedFeed)="selectedFeed = $event"></app-user-profile>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</pg-container>

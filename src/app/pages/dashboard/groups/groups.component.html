@@ -1,0 +1,142 @@
+<pg-container>
+    <div class="row pp-groups app-groups mt-4">
+        <div class="col-lg-3">
+          <div class="card">
+            <div class="card-body" style="text-align: center;">
+              <button class="btn btn-primary" (click)="createGroup()">Create new group</button>
+            </div>
+          </div>
+            <div class="card">
+                <div class="card-body">
+                    <form (ngSubmit)="fetchGroups()" role="form" autocomplete="off">
+                        <div class="form-group">
+                            <label for="inputId">Group ID</label>
+                            <input type="text" name="id" class="form-control" id="inputId" [(ngModel)]="model.id">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName">Name</label>
+                            <input type="text" name="name" class="form-control" id="inputName" [(ngModel)]="model.name">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputOwnerFirstName">Owner first name</label>
+                            <input type="text" name="ownerFirstName" class="form-control" id="inputOwnerFirstName" [(ngModel)]="model.owner_first_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputtOwnerLastName">Owner last name</label>
+                            <input type="text" name="ownerLastName" class="form-control" id="inputtOwnerLastName" [(ngModel)]="model.owner_last_name">
+                        </div>
+                        <button type="submit" class="btn btn-primary" [disabled]="loading">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <!-- START card -->
+            <div class="card card-transparent">
+                <div class="card-body padding-top-0" *ngIf="searchResults">
+                    <ngb-pagination [collectionSize]="searchResults.matched_count" [pageSize]="listSizePerPage" [(page)]="page"
+                                    maxSize="10" [boundaryLinks]="true" (pageChange)="pageChange($event)" [disabled]="loading"
+                                    class="d-flex justify-content-end" size="sm"></ngb-pagination>
+
+                    <div class="table-responsive" *ngIf="searchResults">
+                        <table class="table table-hover table-outline table-vcenter card-table">
+                            <thead>
+                            <tr>
+                                <th class="text-center w-1"><i class="fa fa-picture-o"></i></th>
+                                <th>Name</th>
+                                <th>Owner name</th>
+                                <th class="text-nowrap">Create date</th>
+                                <th>Members</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let group of searchResults.results_by_type.group.data">
+                                <td class="text-center">
+                                    <!-- <ui-avatar [image]="user.displayed_photo ? user.displayed_photo.small_url : ''" status="{{getUserStateColor(user.user_stat)}}"></ui-avatar>-->
+                                    <img [src]="getPhoto(group)" width="30" height="30"/>
+                                </td>
+                                <td>
+                                    <div class="trunc"><a href="" (click)="$event.preventDefault();viewGroup(group)">{{ group.displayed_name }}</a></div>
+                                </td>
+                                <td>
+                                    <div class="trunc">{{ group.owner.displayed_name| slice:0:40 }}</div>
+                                </td>
+                                <td>
+                                    <div class="text-nowrap">{{ group.created_date| slice:0:10 }}</div>
+                                </td>
+                                <td>
+                                    <div class="truncate">{{ group.total_members }}</div>
+                                </td>
+                                <td>
+                                    <a class="icon" (click)="viewUser()">
+                                        <i class="fe fe-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <ngb-pagination [collectionSize]="searchResults.matched_count" [pageSize]="listSizePerPage" [(page)]="page"
+                                    maxSize="10" [boundaryLinks]="true" (pageChange)="pageChange($event)" [disabled]="loading"
+                                    class="d-flex justify-content-end" size="sm"></ngb-pagination>
+                </div>
+            </div>
+            <!-- END card -->
+            <!--<div class="card">
+              <div class="table-responsive" *ngIf="searchResults">
+
+                <ngb-pagination [collectionSize]="searchResults.matched_count" [pageSize]="listSizePerPage" [(page)]="page"
+                                maxSize="10" [boundaryLinks]="true" (pageChange)="pageChange($event)" [disabled]="loading"
+                                class="d-flex justify-content-end" size="sm"></ngb-pagination>
+
+                <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+                  <thead>
+                  <tr>
+                    <th class="text-center w-1"><i class="icon-people"></i></th>
+                    <th>Name</th>
+                    <th>Owner</th>
+                    <th>Creation date</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let group of searchResults.results_by_type.valuedata">
+                      <td class="text-center" >
+                        <a  href="/group/{{valueid}}" (click)="$event.preventDefault();viewGroup(group)" class="group-link text-primary">
+
+        <!-- <ui-avatar [image]="valuedisplayed_photo ? valuedisplayed_photo.small_url : ''"></ui-avatar>-->
+            <!--
+                            </a>
+                          </td>
+                          <td>
+                            <div><a href="/group/{{valueid}}" (click)="$event.preventDefault();viewGroup(group)">{{ valuedisplayed_name }}</a></div>
+                          </td>
+                          <td>
+                            <div>{{ valueowner.displayed_name }}</div>
+                          </td>
+                          <td>
+                            <div>{{ (valuecreated_date ? valuecreated_date : '')| slice:0:10 }}</div>
+                          </td>
+                          <td ngbDropdown placement="bottom-right" class="d-inline-block" #dd="ngbDropdown">
+                            <div style="display:none" ngbDropdownAnchor><!-- hack to avoid anchor --><!--</div>
+                    <i class="fa fa-ellipsis-h" id="dropdownOptions" (click)="$event.stopPropagation(); dd.isOpen() ? dd.close() : dd.open();" ></i>
+                    <div ngbDropdownMenu aria-labelledby="dropdownOptions">
+                      <button class="dropdown-item" (click)="editGroup(group)"><i class="fe fe-eye"></i> Edit</button>
+                      <div class="divider"></div>
+                      <button class="dropdown-item" (click)="askConfirmDelete(group)"><i class="fe fe-trash"></i> Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <ngb-pagination [collectionSize]="searchResults.matched_count" [pageSize]="listSizePerPage" [(page)]="page"
+                            maxSize="10" [boundaryLinks]="true" (pageChange)="pageChange($event)" [disabled]="loading"
+                            class="d-flex justify-content-end" size="sm"></ngb-pagination>
+          </div>
+        </div> -->
+        </div>
+    </div>
+</pg-container>

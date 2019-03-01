@@ -1,0 +1,123 @@
+<div>
+    <div class="card card-default">
+        <div class="card-body no-padding no-margin">
+            <form class="ng-untouched ng-pristine ng-valid" novalidate role="form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-group-default" pgFormGroupDefault>
+                            <label>Registration date</label>
+                            <label>
+                                <input class="form-control" name="created_date"
+                                       value="{{account.created_date | amDateFormat:'YYYY-MM-DD'}} ({{account.created_date | amTimeAgo}})"
+                                       type="text">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-group-default" pgFormGroupDefault>
+                            <label>Updated date</label>
+                            <label>
+                                <input class="form-control" name="updated_date"
+                                       value="{{account.updated_date | amDateFormat:'YYYY-MM-DD hh:mm'}} ({{account.updated_date | amTimeAgo}})"
+                                       type="datetime-local">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-group-default" pgFormGroupDefault>
+                            <label>ID</label>
+                            <label>
+                                <input class="form-control" name="id" [value]="account.id" type="text">
+
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-group-default" pgFormGroupDefault>
+                            <label>External ID</label>
+                            <label>
+                                <input class="form-control" name="external_id" [(ngModel)]="account.external_id" type="text"
+                                       placeholder="External ID (e.g: CRM)">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-group-default required" pgFormGroupDefault>
+                            <label>First name</label>
+                            <label>
+                                <input class="form-control" name="first_name"
+                                       [(ngModel)]="account.first_name" required type="text" placeholder="John">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-group-default required" pgFormGroupDefault>
+                            <label>Last name</label>
+                            <label>
+                                <input class="form-control" name="last_name"
+                                       [(ngModel)]="account.last_name" required type="text" placeholder="Doe">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-group-default required" pgFormGroupDefault>
+                            <label>Email</label>
+                            <label>
+                                <input class="form-control" name="email"
+                                       [(ngModel)]="account.email" required type="email" placeholder="some@example.com">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-group-default form-group-default-select2 required" pgFormGroupDefault>
+                            <label>Gender</label>
+                            <pg-select style="width: 100%;" name="gender" [(ngModel)]="account.gender">
+                                <pg-option *ngFor="let gender of genders"
+                                           [Label]="gender.toString().toLowerCase()"
+                                           [Value]="gender.toString()">
+                                </pg-option>
+                            </pg-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-default input-group col-md-12">
+                    <div class="form-input-group">
+                        <label>
+                            Date of birth ({{now | amDifference:account.date_of_birth:'years':false}} years old)
+                        </label>
+                        <pg-datepicker name="birth_of_date" [(ngModel)]="date_of_birth"></pg-datepicker>
+                    </div>
+                    <div class="input-group-append">
+                                              <span class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                              </span>
+                    </div>
+                </div>
+                <div class="form-group form-group-default input-group col-md-12">
+                    <div class="form-input-group">
+                        <label>Presentation</label>
+                        <label>
+                            <textarea class="form-control pl-0" name="presentation" style="opacity: 1;" rows="5"
+                                      [(ngModel)]="account.presentation" [value]="account.presentation"
+                                      required placeholder="User presentation"></textarea>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="pull-right">
+        <button class="btn btn-complete btn-cons" type="button" [disabled]="!isValid()" (click)="save()">
+            <span class="bold">Save</span>
+        </button>
+        <button class="btn btn-cons" type="button" (click)="cancel()">
+            <span class="bold">Cancel</span>
+        </button>
+    </div>
+</div>

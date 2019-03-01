@@ -1,0 +1,74 @@
+@import '../../@pages/styles/core.scss';
+
+.app-feed-item-modal {
+  .comments {
+    padding-top: 10px;
+  }
+
+  .avatar {
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+
+  .comment {
+    border-top: 1px solid $color-master-light;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .comment-date {
+    font-size: 0.7em;
+    text-align: right;
+    color: $color-master-light;
+  }
+
+  .see-all-btn {
+    color: $color-master;
+  }
+
+  .comment-photo {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      max-height: 300px;
+    }
+  }
+
+  .comment-action-btn {
+    float: right;
+
+    .btn {
+      border: 0 none;
+    }
+
+    button {
+      cursor: pointer;
+    }
+  }
+
+  .comment-message {
+    padding-left: 5px;
+  }
+
+  .edit-message-box {
+    width: 100%;
+
+    button {
+      cursor: pointer;
+      float: right;
+
+    }
+  }
+
+  .confirm-btn {
+    text-align: right;
+
+    button {
+      margin-left: 10px;
+    }
+  }
+}

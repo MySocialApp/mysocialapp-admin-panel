@@ -1,0 +1,28 @@
+<div class="app-comment-input">
+    <div class="card social-card col-100-percent padding-10 ng-tns-c15-5 ng-star-inserted">
+        <form class="simform no-margin ng-untouched ng-pristine ng-valid" autocomplete="off" novalidate stepsform>
+            <div class="row">
+                <ol class="col-md-12 questions">
+                    <li class="ng-tns-c15-5 current">
+                        <textarea class="ng-tns-c15-5" placeholder="Write your comment.." name="post_text" [(ngModel)]="text" type="text"></textarea>
+                    </li>
+                </ol>
+
+                <div class="col-md-12 mt-2">
+                    <div class="pull-left">
+                        <label class="btn btn-file" *ngIf="allowImageUpload">
+                            <i class="fa fa-plus"></i> Image
+                            <input type="file" accept="image/*" (change)="processFile($event)" style="display: none;" #fileInput>
+                        </label>
+                    </div>
+
+                    <div class="pull-right">
+                        <button class="btn btn-complete" [disabled]="!isValid()" (click)="onSend()" type="button">
+                            <i class="fa fa-send"></i> Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="modal-body app-feed-item-modal">
+    <app-feed-item [item]="feed"></app-feed-item>
+    <div class="col-12" *ngIf="displayMoreComment">
+        <a href="#" (click)="$event.preventDefault();getAllComments()" class="see-all-btn">See all comments ({{feed.object.comments.total}}
+            )</a>
+    </div>
+    <div class="comments">
+        <div class="comment" *ngFor="let comment of feed.object.comments.samples">
+            <app-comment-item [feed]="feed" [comment]="comment"></app-comment-item>
+        </div>
+    </div>
+
+</div>

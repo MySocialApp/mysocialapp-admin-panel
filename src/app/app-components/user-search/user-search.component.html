@@ -1,0 +1,35 @@
+<div class="border-left border-right">
+  <div style="z-index: 10">
+    <div class="p-2 text-left">
+      <b>{{ searchResults.matched_count }}</b> users found
+    </div>
+    <div class="p-1">
+      <div class="input-group">
+        <input class="form-control" type="text" name="full_name" [(ngModel)]="searchModel.full_name"
+               (ngModelChange)="onSearchTextChange($event)" placeholder="Search for user..">
+        <div class="input-group-append">
+          <span class="input-group-text btn-info"><i class="fa fa-search"></i></span>
+          <span class="input-group-text btn-info"><i class="fa fa-filter"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white" [ngStyle]="{'height.px': usersHeight, 'overflow-y': 'scroll'}"
+       infiniteScroll infiniteScrollDistance="2" infiniteScrollThrottle="10"
+       (scrolled)="onScrollDown()">
+    <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+      <tbody>
+      <tr *ngFor="let user of users"
+          [ngClass]="isSelectedUser(user) ? 'bg-complete-lighter' : ''"
+          (click)="onSelectUser(user)">
+        <td class="col-md-3">
+          <app-user-profile-avatar [user]="user"></app-user-profile-avatar>
+        </td>
+        <td>
+          <div class="truncate">{{ user.displayed_name }}</div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

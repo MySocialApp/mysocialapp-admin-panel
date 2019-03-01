@@ -1,0 +1,30 @@
+<pg-container>
+    <app-window-size-listener (height)="height = $event"></app-window-size-listener>
+    <div class="newsfeed">
+        <div class="col-md-7">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="pt-2" [ngStyle]="{'height.px': height, 'overflow-y': 'scroll'}"
+                         infiniteScroll infiniteScrollDistance="2" infiniteScrollThrottle="10"
+                         (scrolled)="onWallScrollDown()" [scrollWindow]="false">
+                        <app-post-input class="mt-2" *ngIf="selectedFeed == null" (feedPost)="sendPost($event)"></app-post-input>
+                        <div *ngIf="selectedFeed == null">
+                            <app-feed-item *ngFor="let item of feedItems"
+                                           [item]="item" [showEditBtn]="true" (onCommentClick)="selectedFeed = $event">
+                            </app-feed-item>
+                        </div>
+                        <div *ngIf="feedItems.length === 0">
+                            <span style="font-size: 15px">No posts</span>
+                        </div>
+                        <div class="col-md-12" *ngIf="selectedFeed">
+                            <app-comments [feed]="selectedFeed" (close)="selectedFeed = null"></app-comments>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+
+        </div>
+    </div>
+</pg-container>

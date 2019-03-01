@@ -1,0 +1,33 @@
+<div class="app-post-input">
+    <div class="card social-card col-100-percent padding-10 ng-tns-c15-5 ng-star-inserted">
+        <form class="simform no-margin ng-untouched ng-pristine ng-valid" autocomplete="off" novalidate stepsform>
+            <div class="status-form-inner">
+                <ol class="questions">
+                    <li class="ng-tns-c15-5 current">
+                        <textarea class="ng-tns-c15-5" placeholder="Post your message.." name="post_text" [(ngModel)]="text" type="text"></textarea>
+                    </li>
+                </ol>
+
+                <div class="pull-left mt-2">
+                    <label class="btn btn-file mr-3" *ngIf="allowImageUpload">
+                        <i class="fa fa-plus"></i> Image
+                        <input type="file" accept="image/*" (change)="processFile($event)" style="display: none;" #fileInput>
+                    </label>
+                </div>
+
+                <div class="pull-right mt-2">
+                    <span class="public-button-label pr-2">Publicly visible</span>
+                    <pg-switch Size="small" name="post_switch" [(ngModel)]="public" class="mr-3">
+                    <span class="toggle-switch complete">
+                        <span class="toggle-switch-inner"></span>
+                    </span>
+                    </pg-switch>
+                    <button class="btn btn-complete" [disabled]="!isValid()" (click)="onSend()" type="button">
+                        <i class="fa fa-send"></i> Send
+                    </button>
+                </div>
+            </div>
+            <span class="final-message"></span>
+        </form>
+    </div>
+</div>

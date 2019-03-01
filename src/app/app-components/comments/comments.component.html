@@ -1,0 +1,14 @@
+<div class="app-comments">
+    <div class="row">
+        <button (click)="close.emit()" class="btn flat"><i class="fa fa-arrow-left"></i></button>
+        <h4>Comments</h4>
+    </div>
+    <app-feed-item [item]="feed" [showEditBtn]="true"></app-feed-item>
+    <div class="comments card card-borderless">
+        <div class="comment" *ngFor="let comment of comments">
+            <app-comment-item [feed]="feed" [comment]="comment"></app-comment-item>
+        </div>
+    </div>
+
+    <app-comment-input (comment)="sendComment($event)"></app-comment-input>
+</div>

@@ -1,0 +1,14 @@
+<div class="modal-header" *ngIf="title">
+  <h4 class="modal-title" id="modal-basic-title">Change group owner</h4>
+  <button type="button" class="close" aria-label="Close" (click)="onCancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body app-group-modal">
+  <app-window-size-listener (height)="usersHeight = $event" [topOffset]="100"></app-window-size-listener>
+  <app-user-search [usersHeight]="usersHeight" (onSelectedUser)="onSelectUser($event)" [defaultName]="defaultName"></app-user-search>
+</div>
+<div class="modal-footer" style="padding-bottom: 1em;  ">
+  <button type="button" class="btn btn-outline-dark" (click)="onCancel()">Cancel</button>
+  <button type="button" class="btn btn-outline-dark btn-primary" (click)="onOk()">Change owner</button>
+</div>

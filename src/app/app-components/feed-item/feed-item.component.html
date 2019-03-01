@@ -1,0 +1,60 @@
+<div class="card shadow-sm social-card share share-other full-width m-b-10 d-flex flex-1 no-border sm-vh-75 app-feed-item"
+     [style.opacity]="deleting ? 0.5 : 1">
+    <div class="circle">
+    </div>
+    <div class="card-header clearfix">
+        <div class="row">
+            <app-user-profile-avatar class="ml-3" size="d48" [user]="item.actor"></app-user-profile-avatar>
+            <div class="ml-2">
+                <h5 (click)="visitProfile()">{{item.actor.displayed_name}}</h5>
+                <div class="time">{{item.createdDate.fromNow()}}</div>
+            </div>
+            <div ngbDropdown class="d-inline-block dropdown-feed-item pr-2" style="margin-left: auto">
+                <button class="btn btn-small flat" id="dropDownFeedItem-{{item.object.id}}" ngbDropdownToggle>
+                    <i class="fa fa-ellipsis-h"></i>
+                </button>
+                <div ngbDropdownMenu [attr.aria-valuenow]="'dropDownFeedItem-'+item.object.id">
+                    <button class="dropdown-item cursor btn btn-light" *ngIf="showEditBtn">Edit</button>
+                    <button class="dropdown-item cursor btn btn-light" (click)="$event.stopPropagation();item.object.askDelete=true"
+                            *ngIf="!item.object.askDelete">Delete
+                    </button>
+                    <button class="dropdown-item cursor btn btn-light" (click)="item.object.askDelete=false"
+                            *ngIf="item.object.askDelete">Cancel delete
+                    </button>
+                    <button class="dropdown-item cursor btn btn-danger" (click)="delete()"
+                            *ngIf="item.object.askDelete">Confirm delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <img [src]="photo" *ngIf="photo" style="padding-left: 0; padding-right: 0"/>
+    </div>
+    <div class="card-description pb-2">
+        <p>{{item.object.bodyMessage}}</p>
+    </div>
+    <div class="card-description pb-1">
+        <span>{{item.object.likes.total}} likes</span>
+        <span class="ml-2">{{item.object.comments.total}} comments</span>
+        <span class="ml-2" *ngIf="item.access_control === 'PUBLIC'"><i class="fa fa-globe"></i></span>
+    </div>
+    <div class="card-footer clearfix border-top pt-2">
+        <span>
+            <button class="btn flat" (click)="like()">
+                <i class="fa {{item.object.isLiked() ? 'fa-heart' : 'fa-heart-o'}}"></i> Like
+            </button>
+        </span>
+
+        <span>
+            <button class="btn flat ml-2" (click)="onCommentClick.emit(item)"><i class="fa fa-comment-o"></i> Comment</button>
+        </span>
+
+        <!--<ul class="reactions" (click)="viewItemDetails($event)">
+            <li><a href="#">{{item.object.comments.total}} <i class="fa fa-comment-o"></i></a>
+            </li>
+            <li><a href="#" (click)="viewItemDetails($event)">{{item.object.likes.total}} <i class="fa fa-heart-o"></i></a>
+            </li>
+        </ul>-->
+    </div>
+</div>

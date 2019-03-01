@@ -1,0 +1,88 @@
+<div class="app-user mt-3">
+    <app-window-size-listener (height)="wallHeight = $event" [topOffset]="150"></app-window-size-listener>
+    <div class="row card card-borderless mb-0">
+        <div class="sm-p-l-0 sm-p-r-0 col-md-12">
+            <div class="form-inline m-2">
+                <div class="form-group">
+                    <app-user-profile-avatar size="d48" [user]="user"></app-user-profile-avatar>
+                </div>
+                <div class="form-group">
+                    <div class="ml-2">
+                        <h5 class="no-margin">{{ account.first_name }} {{ account.last_name }}</h5>
+                        <span>Last connection: {{ getLastConnectionDate() | amTimeAgo }}
+                            ({{ getState() }})</span>
+                    </div>
+                </div>
+
+                <div class="form-group mr-2" style="margin-left: auto">
+                    <span class="switch-button-label pr-2">Enabled</span>
+                    <pg-switch [(ngModel)]="account.account_enabled" (ngModelChange)="onSwitchAccountState($event)">
+                        <span tabindex="0" class="toggle-switch complete">
+                            <span class="toggle-switch-inner"></span>
+                        </span>
+                    </pg-switch>
+                </div>
+            </div>
+            <div class="feed">
+                <pg-tabset tabAnimation="slide-left" Type="simple" ShowPagination="true">
+                    <pg-tab>
+                        <ng-template #TabHeading>
+                            Profile
+                        </ng-template>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <app-user-profile-fields [user]="user"></app-user-profile-fields>
+                            </div>
+                        </div>
+                    </pg-tab>
+                    <pg-tab>
+                        <ng-template #TabHeading>
+                            Wall
+                        </ng-template>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div [ngStyle]="{'height.px': wallHeight, 'overflow-y': 'scroll'}"
+                                     infiniteScroll infiniteScrollDistance="2" infiniteScrollThrottle="10"
+                                     (scrolled)="onWallScrollDown()" [scrollWindow]="false">
+                                    <app-post-input *ngIf="selectedFeed == null" [allowImageUpload]="false" (feedPost)="sendPost($event)"></app-post-input>
+                                    <div *ngIf="selectedFeed == null">
+                                        <app-feed-item *ngFor="let item of feedItems"
+                                                       [item]="item" [showEditBtn]="true" (onCommentClick)="selectedFeed = $event">
+                                        </app-feed-item>
+                                    </div>
+                                    <div *ngIf="feedItems.length === 0">
+                                        <span style="font-size: 15px">No posts</span>
+                                    </div>
+                                    <div class="col-md-12" *ngIf="selectedFeed">
+                                        <app-comments [feed]="selectedFeed" (close)="selectedFeed = null"></app-comments>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </pg-tab>
+                    <pg-tab>
+                        <ng-template #TabHeading>
+                            Friends ({{account.user_stat.friend.total}})
+                        </ng-template>
+                        <div class="row">
+                        </div>
+                    </pg-tab>
+                    <pg-tab>
+                        <ng-template #TabHeading>
+                            Followers ({{account.user_stat.follow.total_followers}}/{{account.user_stat.follow.total_following}})
+                        </ng-template>
+                        <div class="row">
+                        </div>
+                    </pg-tab>
+                    <pg-tab>
+                        <ng-template #TabHeading>
+                            Settings
+                        </ng-template>
+                        <div class="row">
+                        </div>
+                    </pg-tab>
+                </pg-tabset>
+            </div>
+        </div>
+    </div>
+</div>

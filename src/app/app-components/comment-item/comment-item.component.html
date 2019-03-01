@@ -1,0 +1,45 @@
+<div class="app-comment-item">
+    <div class="col-12">
+        <div class="row">
+            <app-user-profile-avatar class="ml-3" size="d39" [user]="comment.owner"></app-user-profile-avatar>
+            <div class="ml-2">
+                <span class="bold">{{comment.owner.displayed_name}}</span>
+                <div class="time">{{comment.getCreatedDate.fromNow()}}</div>
+            </div>
+            <div ngbDropdown class="d-inline-block comment-action-btn pr-2" style="margin-left: auto">
+                <button class="btn btn-small flat" id="commentEdit-{{comment.id}}" ngbDropdownToggle>
+                    <i class="fa fa-ellipsis-h"></i></button>
+                <div ngbDropdownMenu [attr.aria-labelledby]="'commentEdit-'+comment.id">
+                    <button class="dropdown-item" (click)="comment.edit=true; comment.originalBody=comment.bodyMessage;">Edit</button>
+                    <button class="dropdown-item" (click)="$event.preventDefault();$event.stopPropagation();comment.confirmDelete=true" *ngIf="!comment.confirmDelete && !comment.deleting">
+                        Delete
+                    </button>
+
+                    <button class="dropdown-item text-primary" (click)="comment.confirmDelete=false" *ngIf="comment.confirmDelete === true && !comment.deleting">
+                        Cancel delete
+                    </button>
+                    <button class="dropdown-item text-danger" (click)="deleteComment(comment)" *ngIf="comment.confirmDelete === true && !comment.deleting">
+                        Confirm delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 pt-2">
+        <div class="photo comment-photo" *ngIf="comment.photo && comment.photo.high_url">
+            <img [src]="getCommentPhoto(comment)"/>
+        </div>
+        <div class="comment-message" *ngIf="!comment.edit">{{comment.bodyMessage}}</div>
+        <div class="col-12" *ngIf="comment.edit">
+            <div class="form-group">
+                <textarea style="opacity: 1" rows="6" [(ngModel)]="comment.bodyMessage" class="edit-message-box"></textarea>
+            </div>
+            <div class="confirm-btn">
+                <button class="btn btn-light btn-small" (click)="comment.displayed_name=comment.originalBody;comment.edit = false;">
+                    Cancel
+                </button>
+                <button class="btn btn-success btn-small" (click)="updateComment(comment);">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

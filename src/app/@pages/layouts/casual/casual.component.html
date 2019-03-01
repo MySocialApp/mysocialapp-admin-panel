@@ -1,0 +1,89 @@
+<pg-header extraClass="bg-primary p-r-0">
+    <div class="header-inner header-md-height">
+        <a href="javascript:void(0)" class="btn-link toggle-sidebar d-lg-none pg pg-menu text-white" (click)="toggleHorizontalMenuMobile()"></a>
+        <div class="">
+            <div class="brand inline no-border d-sm-inline-block">
+                <img [src]="appConfig.splash_logo_image_url" alt="logo" pgRetina
+                     [src1x]="appConfig.splash_logo_image_url"
+                     [src2x]="appConfig.splash_logo_image_url" width="78" height="22">
+                <span class="text-white pl-2 bold">{{ appConfig.name }}</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center">
+            <!-- START User Info-->
+            <div class="pull-left p-r-10 fs-14 font-heading d-lg-inline-block d-none text-white">
+                <span class="semi-bold">{{ account.full_name }}</span>
+            </div>
+            <div class="dropdown pull-right" dropdown>
+                <button class="profile-dropdown-toggle" type="button" dropdownToggle id="profileDropdown">
+              <span class="thumbnail-wrapper d32 circular inline">
+              <img [src]="getAccountAvatar()" alt="" pgRetina
+                   [src1x]="getAccountAvatar()"
+                   [src2x]="getAccountAvatar()" width="32" height="32">
+              </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right profile-dropdown" *dropdownMenu role="menu">
+                    <!--<a href="javascript:void(0)" class="dropdown-item"><i class="fs-13 pg pg-settings_small"></i> Settings</a>-->
+                    <!--<a href="javascript:void(0)" class="dropdown-item"><i class="fs-13 pg pg-outdent"></i> Feedback</a>-->
+                    <!--<a href="javascript:void(0)" class="dropdown-item"><i class="fs-13 pg pg-signals"></i> Help</a>-->
+                    <!--                    <a href="javascript:void(0)" class="clearfix bg-master-lighter dropdown-item">
+                                            <span class="pull-left">Logout</span>
+                                            <span class="pull-right"><i class="fs-13 pg pg-power"></i></span>
+                                        </a>-->
+                    <a (click)="logout()" class="clearfix dropdown-item">
+                        <span class="pull-left">Logout</span>
+                        <span class="pull-right"><i class="fs-13 pg pg-power"></i></span>
+                    </a>
+                </div>
+            </div>
+            <!-- END User Info-->
+            <!--<a href="javascript:void(0)" class="header-icon pg pg-alt_menu btn-link m-l-10 sm-no-margin d-inline-block text-white" (click)="openQuickView($event)"></a>-->
+        </div>
+    </div>
+    <div class="bg-white">
+        <div class="container">
+            <pg-horizontal-menu [Items]="menuItems"></pg-horizontal-menu>
+        </div>
+    </div>
+</pg-header>
+<div class="page-container ">
+    <!-- START PAGE CONTENT WRAPPER -->
+    <div class="page-content-wrapper {{_pageContainerClass}}">
+        <!-- START PAGE CONTENT -->
+        <div class="content {{_contentClass}}">
+            <!--                    <div class="bg-white">
+                                    <div class="container">
+                                        <ol class="breadcrumb breadcrumb-alt">
+                                            <li class="breadcrumb-item">
+                                                <a href="javascript:void(0)">Home</a>
+                                            </li>
+                                            <li class="breadcrumb-item active">Link</li>
+                                        </ol>
+                                    </div>
+                                </div>-->
+            <router-outlet></router-outlet>
+        </div>
+        <!-- END PAGE CONTENT -->
+        <!-- START COPYRIGHT -->
+        <!-- START CONTAINER FLUID -->
+        <ng-template [ngIf]="_footer">
+            <div class=" container   container-fixed-lg footer">
+                <div class="copyright sm-text-center">
+                    <p class="small no-margin pull-left sm-pull-reset">
+                        <span class="hint-text">Copyright &copy; 2018 </span>
+                        &nbsp;<span class="font-montserrat">MySocialApp</span>.&nbsp;
+                        <span class="hint-text">All rights reserved. </span>
+                        <span class="sm-block"><a href="javascript:void(0)" class="m-l-10 m-r-10">Terms of use</a> <span class="muted">|</span> <a href="javascript:void(0)" class="m-l-10">Privacy Policy</a></span>
+                    </p>
+                    <p class="small no-margin pull-right sm-pull-reset">
+                        Hand-crafted <span class="hint-text">&amp; made with Love</span>
+                    </p>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </ng-template>
+        <!-- END COPYRIGHT -->
+    </div>
+    <!-- END PAGE CONTENT WRAPPER -->
+</div>
+<!-- END PAGE CONTAINER -->
