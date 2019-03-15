@@ -1,30 +1,49 @@
 <pg-container>
-    <div class="row pp-groups app-groups mt-4">
+    <div class="row pp-events app-events mt-4">
         <div class="col-lg-3">
           <div class="card">
             <div class="card-body" style="text-align: center;">
-              <button class="btn btn-primary" (click)="createGroup()">Create new group</button>
+              <button class="btn btn-primary" (click)="createEvent()">Create new event</button>
             </div>
           </div>
             <div class="card">
                 <div class="card-body">
-                    <form (ngSubmit)="fetchGroups()" role="form" autocomplete="off">
-                        <div class="form-group">
-                            <label for="inputId">Group ID</label>
+                    <form (ngSubmit)="fetchEvents()" role="form" autocomplete="off">
+                        <div class="form-event">
+                            <label for="inputId">Event ID</label>
                             <input type="text" name="id" class="form-control" id="inputId" [(ngModel)]="model.id">
                         </div>
-                        <div class="form-group">
+                        <div class="form-event">
                             <label for="inputName">Name</label>
                             <input type="text" name="name" class="form-control" id="inputName" [(ngModel)]="model.name">
                         </div>
-                        <div class="form-group">
+                        <div class="form-event">
                             <label for="inputOwnerFirstName">Owner first name</label>
                             <input type="text" name="ownerFirstName" class="form-control" id="inputOwnerFirstName" [(ngModel)]="model.ownerFirstName">
                         </div>
-                        <div class="form-group">
+                        <div class="form-event">
                             <label for="inputtOwnerLastName">Owner last name</label>
                             <input type="text" name="ownerLastName" class="form-control" id="inputtOwnerLastName" [(ngModel)]="model.ownerLastName">
                         </div>
+                        <div class="form-event">
+                            <label for="fromDate">From date</label>
+                            <pg-datepicker name="fromDate" id="fromDate" [(ngModel)]="model.fromDate"></pg-datepicker>
+                        </div>
+                        <div class="form-event">
+                            <label for="toDate">To date</label>
+                            <pg-datepicker name="toDate" id="toDate" [(ngModel)]="model.toDate"></pg-datepicker>
+                        </div>
+                        <div class="form-event">
+                            <label for="around">Around</label>
+                            <input class="form-control" required ngx-google-places-autocomplete id="around"
+                                   #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)"
+                                   value="{{model.location.complete_address}}"/>
+                        </div>
+                        <div class="form-event">
+                            <label for="distance">Distance in km</label>
+                            <input type="number" name="distance" placeholder="Distance" class="form-control" id="distance" [(ngModel)]="model.distance">
+                        </div>
+                        <div style="margin-bottom:1em;"></div>
                         <button type="submit" class="btn btn-primary" [disabled]="loading">Search</button>
                     </form>
                 </div>
@@ -45,28 +64,28 @@
                                 <th class="text-center w-1"><i class="fa fa-picture-o"></i></th>
                                 <th>Name</th>
                                 <th>Owner name</th>
-                                <th class="text-nowrap">Create date</th>
+                                <th class="text-nowrap">Date</th>
                                 <th>Members</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let group of searchResults.results_by_type.group.data">
+                            <tr *ngFor="let event of searchResults.results_by_type.event.data">
                                 <td class="text-center">
                                     <!-- <ui-avatar [image]="user.displayed_photo ? user.displayed_photo.small_url : ''" status="{{getUserStateColor(user.user_stat)}}"></ui-avatar>-->
-                                    <img [src]="getPhoto(group)" width="30" height="30"/>
+                                    <img [src]="getPhoto(event)" width="30" height="30"/>
                                 </td>
                                 <td>
-                                    <div class="trunc"><a href="" (click)="$event.preventDefault();viewGroup(group)">{{ group.displayed_name }}</a></div>
+                                    <div class="trunc"><a href="" (click)="$event.preventDefault();viewEvent(event)">{{ event.displayed_name }}</a></div>
                                 </td>
                                 <td>
-                                    <div class="trunc">{{ group.owner.displayed_name| slice:0:40 }}</div>
+                                    <div class="trunc">{{ event.owner.displayed_name| slice:0:40 }}</div>
                                 </td>
                                 <td>
-                                    <div class="text-nowrap">{{ group.created_date| slice:0:10 }}</div>
+                                    <div class="text-nowrap">{{ event.start_date| slice:0:10 }}</div>
                                 </td>
                                 <td>
-                                    <div class="truncate">{{ group.total_members }}</div>
+                                    <div class="truncate">{{ event.total_members }}</div>
                                 </td>
                                 <td>
                                     <a class="icon" (click)="viewUser()">
@@ -102,16 +121,16 @@
                   </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let group of searchResults.results_by_type.valuedata">
+                    <tr *ngFor="let event of searchResults.results_by_type.valuedata">
                       <td class="text-center" >
-                        <a  href="/group/{{valueid}}" (click)="$event.preventDefault();viewGroup(group)" class="group-link text-primary">
+                        <a  href="/event/{{valueid}}" (click)="$event.preventDefault();viewEvent(event)" class="event-link text-primary">
 
         <!-- <ui-avatar [image]="valuedisplayed_photo ? valuedisplayed_photo.small_url : ''"></ui-avatar>-->
             <!--
                             </a>
                           </td>
                           <td>
-                            <div><a href="/group/{{valueid}}" (click)="$event.preventDefault();viewGroup(group)">{{ valuedisplayed_name }}</a></div>
+                            <div><a href="/event/{{valueid}}" (click)="$event.preventDefault();viewEvent(event)">{{ valuedisplayed_name }}</a></div>
                           </td>
                           <td>
                             <div>{{ valueowner.displayed_name }}</div>
@@ -123,9 +142,9 @@
                             <div style="display:none" ngbDropdownAnchor><!-- hack to avoid anchor --><!--</div>
                     <i class="fa fa-ellipsis-h" id="dropdownOptions" (click)="$event.stopPropagation(); dd.isOpen() ? dd.close() : dd.open();" ></i>
                     <div ngbDropdownMenu aria-labelledby="dropdownOptions">
-                      <button class="dropdown-item" (click)="editGroup(group)"><i class="fe fe-eye"></i> Edit</button>
+                      <button class="dropdown-item" (click)="editEvent(event)"><i class="fe fe-eye"></i> Edit</button>
                       <div class="divider"></div>
-                      <button class="dropdown-item" (click)="askConfirmDelete(group)"><i class="fe fe-trash"></i> Delete</button>
+                      <button class="dropdown-item" (click)="askConfirmDelete(event)"><i class="fe fe-trash"></i> Delete</button>
                     </div>
                   </td>
                 </tr>

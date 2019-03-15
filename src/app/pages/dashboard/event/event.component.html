@@ -1,0 +1,189 @@
+<pg-container>
+    <div class="row app-event" *ngIf="event">
+        <div class="col-lg-5 col-md-12">
+            <app-event-profile [event]="event" *ngIf="event"></app-event-profile>
+        </div>
+        <div class="col-lg-7 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <ngb-tabset #t="ngbTabset">
+                        <ngb-tab id="tabFeed" title="Feed">
+                            <ng-template ngbTabContent>
+                                <div class="col-lg-12" *ngFor="let item of feedItems">
+                                    <app-feed-item [item]="item" [showEditBtn]="true"></app-feed-item>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                        <ngb-tab id="tabMembers" title="Members" *ngIf="members">
+                            <ng-template ngbTabContent>
+                                <ngb-pagination [collectionSize]="event.total_members" [pageSize]="listSizePerPage" [(page)]="memberPage"
+                                                maxSize="10" [boundaryLinks]="true" (pageChange)="getEventPageMembers($event)"
+                                                class="d-flex justify-content-end" size="sm"></ngb-pagination>
+                                <div class="table-responsive" *ngIf="members">
+                                    <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Join date</th>
+                                            <th>View</th>
+                                            <th>Member</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr *ngFor="let member of members">
+                                            <td class="truncate">
+                                                <img [src]="getMemberAvatar(member.user)" width="35" height="35" class="avatar"/>
+                                                {{ member.user.displayed_name }}
+                                            </td>
+                                            <td>
+                                                <div>{{ member.updated_date | slice:0:10 }}</div>
+                                            </td>
+                                            <td>
+                                                <a class="icon cursor" (click)="viewUser(member.user)">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            </td>
+                                            <td>
+                                              <pg-switch [hidden]="member.user.id === event.owner.id" [ngModel]="isMember(member)" (ngModelChange)="switchMember(member)"></pg-switch>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </ng-template>
+                        </ngb-tab>
+                        <ngb-tab id="tabAdmin" title="Admin">
+                            <ng-template ngbTabContent>
+                                <p class="text-center">
+                                    This panel allows to delete & push event members to another event.<br/>
+                                    As soon as event is deleted it is not possible to retrieve data anymore.<br/>
+                                </p>
+                                <div class="col-12 text-center" style="margin-top:50px;">
+                                    <button type="button" class="btn btn-warning" (click)="doSearchEvent()">Push members to another event</button>
+                                </div>
+                                <div class="col-12 text-center" style="margin-top:50px;">
+                                    <button type="button" class="btn btn-danger" (click)="deleteEvent()">Delete event</button>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                    </ngb-tabset>
+                </div>
+            </div>
+        </div>
+    </div>
+</pg-container>
+<ng-template #confirmDeletion>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Delete event</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Attention, deleting a event is definitive, an no operation nor restoration will be possible once the event is deleted.<br/>
+    Particularly, be sure to push members to another event if needed.
+  </div>
+  <div class="card-footer text-right">
+    <button type="submit" class="btn btn-light" (click)="closeModal()" [disabled]="deleting">Cancel</button>
+    <button type="submit" class="btn btn-primary" (click)="doDeleteEvent()" [disabled]="deleting">Delete</button>
+  </div>
+</ng-template>
+<ng-template #searchEvent>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Push members to another event</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+    <div class="card">
+      <div class="card-body">
+        <form (ngSubmit)="fetchEvents()" role="form" autocomplete="off">
+          <div class="form-event">
+            <label for="inputId">Event ID</label>
+            <input type="text" name="id" class="form-control" id="inputId" [(ngModel)]="model.id">
+          </div>
+          <div class="form-event">
+            <label for="inputName">Name</label>
+            <input type="text" name="name" class="form-control" id="inputName" [(ngModel)]="model.name">
+          </div>
+          <div class="form-event">
+            <label for="inputOwnerFirstName">Owner first name</label>
+            <input type="text" name="ownerFirstName" class="form-control" id="inputOwnerFirstName" [(ngModel)]="model.owner_first_name">
+          </div>
+          <div class="form-event">
+            <label for="inputtOwnerLastName">Owner last name</label>
+            <input type="text" name="ownerLastName" class="form-control" id="inputtOwnerLastName" [(ngModel)]="model.owner_last_name">
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">Search</button>
+        </form>
+      </div>
+    </div>
+    <!-- START card -->
+    <div class="card card-transparent">
+      <div class="card-body padding-top-0" *ngIf="searchResults">
+        <ngb-pagination [collectionSize]="searchResults.matched_count" [pageSize]="listSizePerPage" [(page)]="page"
+                        maxSize="10" [boundaryLinks]="true" (pageChange)="pageChange($event)" [disabled]="loading"
+                        class="d-flex justify-content-end" size="sm"></ngb-pagination>
+
+        <div class="table-responsive" *ngIf="searchResults">
+          <table class="table table-hover table-outline table-vcenter card-table">
+            <thead>
+            <tr>
+              <th class="text-center w-1"><i class="fa fa-picture-o"></i></th>
+              <th>Name</th>
+              <th>Owner name</th>
+              <th>Create date</th>
+              <th>Members</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let event of searchResults.results_by_type.event.data" (click)="pushUsersToEvent(event)" style="cursor: pointer;">
+              <td class="text-center">
+                <!-- <ui-avatar [image]="user.displayed_photo ? user.displayed_photo.small_url : ''" status="{{getUserStateColor(user.user_stat)}}"></ui-avatar>-->
+                <img [src]="getPhoto(event)" width="30" height="30"/>
+              </td>
+              <td>
+                <div class="truncate">{{ event.displayed_name }}</div>
+              </td>
+              <td>
+                <div class="truncate">{{ event.owner.displayed_name| slice:0:40 }}</div>
+              </td>
+              <td>
+                <div>{{ event.created_date| slice:0:10 }}</div>
+              </td>
+              <td>
+                <div>{{ event.total_members }}</div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ngb-pagination [collectionSize]="searchResults.matched_count" [pageSize]="listSizePerPage" [(page)]="page"
+                        maxSize="10" [boundaryLinks]="true" (pageChange)="pageChange($event)" [disabled]="loading"
+                        class="d-flex justify-content-end" size="sm"></ngb-pagination>
+      </div>
+    </div>
+    <!-- END card -->
+</ng-template>
+<ng-template #confirmEvent>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Push members to another event</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" [hidden]="pushedMembers >= 0">
+    Are you sure to move every members of this event to the event {{chosenEvent.name}} ?
+  </div>
+  <div class="progress m-b-0" [hidden]="pushedMembers < 0">
+    <!-- START BOOTSTRAP PROGRESS (http://getbootstrap.com/components/#progress) -->
+    <div class="progress-bar progress-bar-info" [style.width.%]="pushedMembers * 100 / event.total_members"></div>
+    <!-- END BOOTSTRAP PROGRESS -->
+  </div>
+  <div class="card-footer text-right">
+    <button type="submit" class="btn btn-light" (click)="closeModal()" [disabled]="pushedMembers >= 0">Cancel</button>
+    <button type="submit" class="btn btn-primary" (click)="doPushUsersToEvent()" [disabled]="pushedMembers >= 0">Push</button>
+  </div>
+</ng-template>

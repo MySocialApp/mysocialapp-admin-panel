@@ -5,13 +5,13 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  z-index: 700;
+  z-index: 1100;
 }
 
 .cdk-overlay-backdrop, .cdk-overlay-pane {
   position: absolute;
   pointer-events: auto;
-  z-index: 700;
+  z-index: 1100;
 }
 
 .cdk-overlay-backdrop {
@@ -28,7 +28,7 @@
 .cdk-overlay-backdrop, .cdk-overlay-pane {
   position: absolute;
   pointer-events: auto;
-  z-index: 700;
+  z-index: 1100;
 }
 
 .truncate {

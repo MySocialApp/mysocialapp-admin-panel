@@ -35,14 +35,19 @@ import {QuickStatsWidgetComponent} from './widgets/quick-stats-widget/quick-stat
 import {TodoListWidgetComponent} from './widgets/todo-list-widget/todo-list-widget.component';
 import {GraphWidgetBasicComponent} from './widgets/graph-widget-basic/graph-widget-basic.component';
 import {UsersComponent} from './users/users.component';
+import {EventsComponent} from './events/events.component';
+import {EventComponent} from './event/event.component';
 import {GroupsComponent} from './groups/groups.component';
 import {GroupComponent} from './group/group.component';
 import {NgbDropdownModule, NgbPaginationModule, NgbTabsetModule} from '@ng-bootstrap/ng-bootstrap';
+import {EventModalComponent} from '../../app-components/event-modal/event-modal.component';
 import {GroupModalComponent} from '../../app-components/group-modal/group-modal.component';
 import {FeedItemComponent} from '../../app-components/feed-item/feed-item.component';
 import {ConfirmModalComponent} from '../../app-components/confirm-modal/confirm-modal.component';
+import {EventEditModalComponent} from '../../app-components/event-edit-modal/event-edit-modal.component';
 import {GroupEditModalComponent} from '../../app-components/group-edit-modal/group-edit-modal.component';
 import {AppComponentsModule} from '../../app-components/app-components.module';
+import {EventProfileComponent} from './event/components/event-profile/event-profile.component';
 import {GroupProfileComponent} from './group/components/group-profile/group-profile.component';
 import {SharedModule} from '../../@pages/components/shared.module';
 import {NgxDatatableModule} from '@swimlane/ngx-datatable';
@@ -61,6 +66,8 @@ import {NewsfeedComponent} from './newsfeed/newsfeed.component';
 import {WindowSizeListenerComponent} from '../../app-components/window-size-listener/window-size-listener.component';
 import {UserProfileComponent} from '../../app-components/user-profile/user-profile.component';
 import {UserComponent} from './user/user.component';
+import {MapWidgetComponent} from './widgets/map-widget/map-widget.component';
+import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
     direction: 'horizontal',
@@ -82,7 +89,7 @@ const components = [
     GraphWidgetComponent,
     GraphWidgetBasicComponent,
     TableBasicWidgetComponent,
-    // MapWidgetComponent,
+    MapWidgetComponent,
     RealtimeWidgetComponent,
     StackedBarWidgetComponent,
     GraphOptionsWidgetComponent,
@@ -95,6 +102,9 @@ const components = [
     QuickStatsWidgetComponent,
     TodoListWidgetComponent,
     UsersComponent,
+    EventsComponent,
+    EventComponent,
+    EventProfileComponent,
     GroupsComponent,
     GroupComponent,
     GroupProfileComponent,
@@ -123,6 +133,7 @@ const components = [
         FormsModule,
         pgSelectModule,
         pgDatePickerModule,
+        GooglePlaceModule,
         MomentModule,
         MessageModule,
         InfiniteScrollModule,
@@ -135,10 +146,12 @@ const components = [
         useValue: DEFAULT_SWIPER_CONFIG
     }],
     entryComponents: [
+        EventModalComponent,
         GroupModalComponent,
         FeedItemComponent,
         FeedItemModalComponent,
         ConfirmModalComponent,
+        EventEditModalComponent,
         GroupEditModalComponent,
     ]
 })

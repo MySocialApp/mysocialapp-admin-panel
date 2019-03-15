@@ -1,0 +1,60 @@
+<div class="modal-body app-event-modal">
+    <div class="card card-profile card-profile card-transparent">
+        <div class="card-header" [style.background-image]="profile_cover_photo">
+            <img [style.opacity]="profile_photo==''?0:1" class="card-profile-img" src="{{profile_photo}}" width="120" height="120">
+        </div>
+        <div class="card-body text-center">
+            <h3 class="mb-3"><a href="#">{{ event.displayed_name }}</a></h3>
+            <div class="mb-4">
+                <a class="btn btn-primary" href="{{link}}">Voir plus</a>
+            </div>
+            <p class="mb-4">
+                {{event.description|slice:0:descriptionLengthLimit}}
+                {{event.description.length > descriptionLengthLimit ? '...' : ''}}
+            </p>
+            <table class="table card-table">
+                <tr>
+                    <td width="1"><i class="fa fa-user text-muted"></i></td>
+                    <td>Event ID</td>
+                    <td>{{event.id}}</td>
+                </tr>
+                <tr>
+                    <td width="1"><i class="fa fa-user text-muted"></i></td>
+                    <td>Owner</td>
+                    <td><a href="/user/{{event.owner.id}}">{{event.owner.displayed_name}}</a></td>
+                </tr>
+                <tr>
+                    <td width="1"><i class="fa fa-map text-muted"></i></td>
+                    <td>Location</td>
+                    <td>{{event.location.complete_city_address}}</td>
+                </tr>
+                <tr>
+                    <td width="1"><i class="fa fa-map text-muted"></i></td>
+                    <td>Start</td>
+                    <td>{{event.start_date}}</td>
+                </tr>
+                <tr>
+                    <td width="1"><i class="fa fa-map text-muted"></i></td>
+                    <td>End</td>
+                    <td>{{event.end_date}}</td>
+                </tr>
+                <tr>
+                    <td width="1"><i class="fa fa-users text-muted"></i></td>
+                    <td>Members</td>
+                    <td>{{event.total_members}}</td>
+                </tr>
+                <tr>
+                    <td width="1"><i class="fa fa-lock text-muted"></i></td>
+                    <td>Access</td>
+                    <td>{{event.event_member_access_control}}</td>
+                </tr>
+                <tr *ngFor="let field of event.custom_fields">
+                    <td width="1"><i class="fa fa-star text-muted"></i></td>
+                    <td>{{field.label}}</td>
+                    <td>{{field.value}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>

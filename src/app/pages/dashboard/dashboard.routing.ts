@@ -4,6 +4,8 @@ import {UsersComponent} from './users/users.component';
 import {GroupComponent} from './group/group.component';
 import {NewsfeedComponent} from './newsfeed/newsfeed.component';
 import {UserComponent} from './user/user.component';
+import {EventsComponent} from './events/events.component';
+import {EventComponent} from './event/event.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -43,6 +45,20 @@ export const dashboardRoutes: Routes = [
                 },
                 path: 'group/:id',
                 component: GroupComponent,
+            },
+            {
+                data: {
+                    title: 'Events management'
+                },
+                path: 'events',
+                component: EventsComponent,
+            },
+            {
+                data: {
+                    title: 'Event details'
+                },
+                path: 'event/:id',
+                component: EventComponent,
             }
         ],
     },
